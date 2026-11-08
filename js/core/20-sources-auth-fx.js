@@ -3,7 +3,7 @@ function sources(){return `<div class='page'><h1 style='font-size:2rem'>${I('boo
 function renderL(){const q=($('#lq').value||'').toLowerCase(),cur=location.hash.slice(3),g={},add=(k,s,d)=>{((g[k]=g[k]||{})[s]=g[k][s]||[]).push(d)};D.filter(d=>d.n.toLowerCase().includes(q)||d.sys.toLowerCase().includes(q)).forEach(d=>{if(!gzv(d))return;add(d.sys,subOf(d),d);if(RARE.includes(d.id))add('Rare Diseases',vsub(d,'R'),d);if(!d.stub&&sev(d)[0]>=8)add('Deadly And Dangerous',vsub(d,'D'),d);if(d.grey&&gzOn())add('Grey Zone',d.grey,d)});['Rare Diseases','Deadly And Dangerous','Grey Zone'].forEach(k=>{const v=g[k];delete g[k];if(v)g[k]=v});const it=d=>`<div class='it' style='${d.id==cur?'color:var(--ac)':''}' onclick="go('d/${d.id}')">${dic(d)} ${d.n}</div>`;$('#ll').innerHTML=Object.entries(g).map(([k,sub])=>{const n=Object.values(sub).reduce((a,l)=>a+l.length,0);return `<details ${q||Object.values(sub).some(l=>l.some(d=>d.id==cur))?'open':''}><summary>${k} (${n})</summary>${Object.entries(sub).sort().map(([s,l])=>`<details class='sub' ${q||l.some(d=>d.id==cur)?'open':''}><summary>${s} (${l.length})</summary>${l.map(it).join('')}</details>`).join('')}</details>`}).join('')||`<p class='note'>No matches.</p>`}
 function thBuild(){$('#thl').innerHTML=TH.map((c,i)=>`<button type='button' data-i='${i}'>${swa(i)} ${THN[i]}</button>`).join('')}
 (S.cth||[]).forEach(t=>{TH.push([t[1],t[2]]);THN.push(t[0])});thBuild();
-const GOOGLE_CLIENT_ID='';
+const GOOGLE_CLIENT_ID='799831133486-rte6l2c3ej3s0t3p77slu2ophjkv4tus.apps.googleusercontent.com';
 const GCLIENT_KEY='daGClient';
 const gHosted=()=>/^https?:$/.test(location.protocol);
 const gOrigin=()=>{try{return gHosted()&&location.origin!=='null'?location.origin:''}catch(e){return''}};
