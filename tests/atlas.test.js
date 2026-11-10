@@ -77,13 +77,18 @@
     check('stored state is validated', () => {
       const s = DA.validateState({
         b: ['t2dm', 'bad id', '__proto__'],
-        th: 99,
+        th: 999,
         ts: 1000,
         pf: 'javascript:alert(1)',
         md: 'light',
         rnd: 0
       });
-      return s.b.length === 1 && s.b[0] === 't2dm' && s.th === 20 && s.ts === 125 && s.pf === '' && s.md === 'light' && s.rnd === 0;
+      return s.b.length === 1 && s.b[0] === 't2dm' && s.th === 200 && s.ts === 125 && s.pf === '' && s.md === 'light' && s.rnd === 0;
+    });
+    check('theme indexes beyond the old cap survive validation', () => DA.validateState({ th: 25 }).th === 25);
+    check('custom theme names are stripped of markup', () => {
+      const s = DA.validateState({ cth: [['<svg onload=alert(1)>', '#fff', '#000']] });
+      return s.cth.length === 1 && s.cth[0][0] === 'svg onload=alert(1)';
     });
     check('bookmark state rejects unsafe identifiers', () => {
       const s = DA.validateState({ b: ['t2dm', 'x"><script>', 'asthma'] });
@@ -141,6 +146,18 @@
       const q = document.getElementById('q');
       if (!q) return true;
       return q.getAttribute('role') === 'combobox' && q.getAttribute('aria-controls') === 'res' && q.hasAttribute('aria-expanded');
+    });
+    check('cloud helpers are available', () => !!(window.DA && DA.cloud && typeof DA.cloud.emailFor === 'function'));
+    check('cloud username maps to a stable sign-in address', () => {
+      if (!(window.DA && DA.cloud)) return false;
+      return DA.cloud.emailFor('Asthma.User') === 'asthma.user@users.disease-atlas.invalid'
+        && DA.cloud.emailFor('has space') === 'hasspace@users.disease-atlas.invalid'
+        && DA.cloud.emailFor('') === '';
+    });
+    check('cloud state key follows the local session', () => {
+      if (!(window.DA && DA.cloud)) return false;
+      const id = localStorage.getItem('daSess');
+      return DA.cloud.stateKey() === (id ? 'da_u_' + id : 'da');
     });
 
     const el = panel();

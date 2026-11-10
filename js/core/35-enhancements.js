@@ -398,9 +398,13 @@
   /* ---------- observer: single intersection observer + re-enhance ---------- */
   if (typeof window.obs === 'function' && 'IntersectionObserver' in window) {
     let io;
+    const watched = new Set();
     window.obs = function () {
       io = io || new IntersectionObserver(entries => entries.forEach(entry => entry.target.classList.toggle('in', entry.isIntersecting)), { threshold: 0.15 });
-      document.querySelectorAll('.card:not(.in),.warn:not(.in),.rv:not(.in)').forEach(el => io.observe(el));
+      watched.forEach(el => { if (!el.isConnected) { io.unobserve(el); watched.delete(el); } });
+      document.querySelectorAll('.card:not(.in),.warn:not(.in),.rv:not(.in)').forEach(el => {
+        if (!watched.has(el)) { io.observe(el); watched.add(el); }
+      });
     };
   }
 

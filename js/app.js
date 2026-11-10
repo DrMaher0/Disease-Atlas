@@ -1,5 +1,6 @@
 invFixAll();
 applyEdits();
+{const bn=$('#bootn');if(bn)bn.textContent=D.filter(d=>!d.stub&&!d.del).length;}
 DA.validateDataset();
 dna();
 applyS();

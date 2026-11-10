@@ -84,7 +84,7 @@
       };
     }) : [];
     out.fbk = Array.isArray(raw.fbk) ? raw.fbk.slice(-200).filter(isPlain) : [];
-    out.th = int(raw.th, 0, 20, 0);
+    out.th = int(raw.th, 0, 200, 0);
     out.ts = int(raw.ts, 85, 125, 100);
     out.sy = raw.sy ? 1 : 0;
     out.dna = raw.dna === undefined ? 1 : (raw.dna ? 1 : 0);
@@ -104,7 +104,7 @@
     out.bg = typeof raw.bg === 'string' && /^[a-z0-9_\-]{1,40}$/i.test(raw.bg) ? raw.bg : 'dna';
     out.cth = Array.isArray(raw.cth) ? raw.cth.slice(0, 12).map(t => {
       if (!Array.isArray(t)) return null;
-      const name = String(t[0] || '').slice(0, 24);
+      const name = String(t[0] || '').replace(/[<>&"']/g, '').slice(0, 24);
       return [name, COLOR.test(t[1]) ? t[1] : '#22d3ee', COLOR.test(t[2]) ? t[2] : '#a78bfa'];
     }).filter(Boolean) : [];
     return out;
