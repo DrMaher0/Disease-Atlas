@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Disease Atlas</title><meta name="description" content="Disease Atlas: an interactive pathology encyclopedia with disease pages, investigations, differential diagnosis, treatment, severity ratings and organ maps. For educational purposes only."><meta name="theme-color" content="#070b14"><meta property="og:title" content="Disease Atlas"><meta property="og:description" content="Interactive medical disease encyclopedia for education."><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23070b14'/%3E%3Cpath d='M32 12c-8-6-18 0-16 10-8 4-6 16 2 18 2 8 12 10 14 2 2 8 12 6 14-2 8-2 10-14 2-18 2-10-8-16-16-10z' fill='none' stroke='%2322d3ee' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head><body>
+<a class="skip-link" href="#app">Skip to content</a>
+<div id="boot" class="boot" role="status" aria-live="polite"><div class="boot-card"><div class="boot-mark"><svg class="boot-logo" viewBox="6 -14 54 58" fill="none" stroke="var(--ac)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="bl-outline" d="M10 30a7 7 0 0 1 6-11a8 8 0 0 1 14-6a8 8 0 0 1 14 2a8 8 0 0 1 8 11a7 7 0 0 1-3 11a6 6 0 0 1-10 3a6 6 0 0 1-10 0a6 6 0 0 1-8 1a6 6 0 0 1-7-4a5 5 0 0 1-4-7z"/><path class="bl-fold" d="M30 13c-2 6 3 8 0 14M22 22c4 0 6 3 5 7M42 15c-3 4-1 7 4 9M37 27c3 0 6 2 7 6M16 31c3-1 6 1 6 5"/><g class="bl-helix" stroke="var(--ac2)" transform="translate(31 20) rotate(30) translate(-32 -70)"><path d="M24 42c0 7 16 7 16 14s-16 7-16 14M40 42c0 7-16 7-16 14s16 7 16 14"/><path class="bl-rungs" d="M27 45h10M27 53h10M26 59h12M27 67h10" stroke-width="1.4"/></g></svg></div><p class="boot-title">Loading Disease Atlas…</p><p class="note"><span id="bootn">…</span> disease entries · works offline</p></div></div>
+<canvas id="dna"></canvas><div class="glow l"></div><div class="glow r"></div>
+<header>
+ <div class="brand" onclick="go('')"><svg width="26" height="31" viewBox="6 -14 54 58" fill="none" stroke="var(--ac)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 30a7 7 0 0 1 6-11a8 8 0 0 1 14-6a8 8 0 0 1 14 2a8 8 0 0 1 8 11a7 7 0 0 1-3 11a6 6 0 0 1-10 3a6 6 0 0 1-10 0a6 6 0 0 1-8 1a6 6 0 0 1-7-4a5 5 0 0 1-4-7z"/><path d="M30 13c-2 6 3 8 0 14M42 15c-3 4-1 7 4 9" opacity=".6"/><g stroke="var(--ac2)" transform="translate(31 20) rotate(30) translate(-32 -70)"><path d="M24 42c0 7 16 7 16 14s-16 7-16 14M40 42c0 7-16 7-16 14s16 7 16 14"/></g></svg><span>Disease Atlas</span></div>
+ <button id="dice" title="Random disease" aria-label="Random disease" style="display:none"></button><nav id="nav"></nav><button id="mb" title="Toggle light/dark" aria-label="Toggle light or dark mode"></button>
+ <button id="hb" title="History" aria-label="History"><svg width="26" height="18" viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3c4-1 7 0 9 2v12c-2-2-5-3-9-2zM20 5c2-2 5-3 9-2v12c-4-1-7 0-9 2z"/><path d="M11 5v12M20 5v12"/></svg> ➜</button>
+ <button id="sib">Sign In</button><button class="prof" id="pb"><div class="av">?</div><div><span class="nm">Guest</span><small>Visitor</small></div></button>
+</header>
+<div class="menu" id="menu">
+ 
+ <button onclick="openM('set')">Appearance &amp; Settings</button><button onclick="go('bookmarks')">Bookmarks</button><button id='mpf' style='display:none' onclick="$('#pff').click()">Change profile picture</button><button id='mun' style='display:none' onclick='chUn()'>Change username</button><button id='mlo' style='display:none' onclick='logout()'>Log out</button><input type='file' id='pff' accept='image/*' hidden><button onclick="toggleD(1)">Browsing history</button>
+</div>
+<div class="drawer" id="dr"><div style='display:flex;gap:8px;align-items:center'><h3 style='margin:0;flex:1'>Library</h3><button id='dice2' title='Random disease'></button></div><input id='lq' placeholder='Filter library' style='margin:10px 0'><details id='hd'><summary>History</summary><div id="hl"></div><button onclick="S.h=[];save();renderH()" style="margin:8px 0">Clear history</button></details><div id='ll'></div></div><button id='dt' aria-label='Toggle library sidebar'></button>
+<div class="modal" id="mset"><div><h3 style="margin-top:0">Appearance &amp; Settings</h3>
+ <label>Background</label><select id="bg"></select><label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input type="checkbox" id="rnd" style="width:auto"> Random background each time the home page loads</label><label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input type="checkbox" id="bgf" style="width:auto"> Match the background to the disease category</label><p class="note">Turn random off to keep the background chosen above.</p><label>Color theme</label><div class='thd'><button id='thb' type='button'></button><div id='thl' class='thl' hidden></div></div><button id='ctb' type='button' style='margin-top:8px;width:100%'></button>
+ <label>Text size: <b id="tv">100%</b></label><input type="range" id="ts" min="85" max="125" step="5" value="100">
+ <label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input type="checkbox" id="sy" style="width:auto"> Sync siren with theme (off by default)</label>
+ <label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input type="checkbox" id="dn" style="width:auto"> Animated background</label><label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input type="checkbox" id="gl" style="width:auto"> Siren background glow</label><label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input type="checkbox" id="rm" style="width:auto"> Reduce motion (stops all animations)</label><button onclick="S.th=0;S.ts=100;S.sy=0;S.mu='';S.dna=1;S.gl=1;S.rm=0;save();applyS()" style="margin:14px 8px 0 0">Reset to defaults</button><button onclick="closeM()" style="margin-top:14px">Close</button></div></div>
+
+<div class="modal" id="mw"><div><svg class='ic wl' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l10 18H2zM12 10v5M12 18v.5'/></svg><h3 style='margin:6px 0'>Disclaimer</h3><p>Disease Atlas is for <b>educational purposes only</b>. It is not medical advice, diagnosis or treatment. Always consult a qualified healthcare professional, and contact emergency services in an emergency. Not every disease is listed, and some entries may not be diseases at all (controversial, physiological, underreported or unofficial labels).</p><label id='wcb' style='display:none;align-items:center;gap:8px;justify-content:center;color:var(--tx)'><input type='checkbox' id='wnv' style='width:auto'> Don't show again</label><button id='wok' style='margin-top:12px;width:100%'>Agree</button></div></div>
+<div class='modal' id='msi'><div><h3>Sign In</h3><label>Username or Email</label><input id='siu' autocomplete='username'><label>Password</label><input id='sip' type='password' autocomplete='current-password'><p class='note' id='sie' style='color:#f87171'></p><button id='sigo' style='width:100%'>Sign In</button><button id='sicr' style='width:100%;margin-top:8px'>Create an Account</button><p class='note' id='sinote'>Accounts are saved on this device only. Syncing across devices would need a server.</p></div></div><div class='modal' id='msu'><div><h3>Create an Account</h3><label>Username</label><input id='suu' autocomplete='username'><label>Email</label><input id='sue' type='email' autocomplete='email'><label style='display:flex;gap:8px;align-items:center;color:var(--tx)'><input type='checkbox' id='sun' style='width:auto'> I do not want to use an email</label><label>Date of birth (required, 13 or older)</label><input id='sud' type='date'><label>Gender</label><select id='sug'><option>Male</option><option>Female</option><option>I prefer not to say</option></select><label>Password (8 or more characters)</label><input id='sup' type='password' autocomplete='new-password'><label>Confirm password</label><input id='suc' type='password' autocomplete='new-password'><p class='note' id='sue2' style='color:#f87171'></p><button id='suok' style='width:100%'>Create Account</button><button id='sub' style='width:100%;margin-top:8px'>Back to Sign In</button><p class='note' id='sunote'>Date of birth and gender are kept private and are never shown. Accounts are saved on this device only.</p></div></div><div id='dov' class='dov'><div><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'><rect x='4' y='4' width='16' height='16' rx='3'/><circle cx='9' cy='9' r='1'/><circle cx='15' cy='9' r='1'/><circle cx='12' cy='12' r='1'/><circle cx='9' cy='15' r='1'/><circle cx='15' cy='15' r='1'/></svg><div class='ldr' id='ldr' hidden></div></div></div><div id='tip' class='tip'></div><div id='sevg'></div><main id="app"></main>
+<div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+<button id="btt" class="btt" type="button" aria-label="Back to top" hidden><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<noscript><p class="note" style="padding:20px">Disease Atlas needs JavaScript to run.</p></noscript>
+  <script defer src="js/core/00-security.js"></script>
+  <script defer src="js/data/01-seed.js"></script>
+  <script defer src="js/core/02-state.js"></script>
+  <script defer src="js/ui/03-views.js"></script>
+  <script defer src="js/core/04-router.js"></script>
+  <script defer src="js/core/05-background.js"></script>
+  <script defer src="js/data/06-organs.js"></script>
+  <script defer src="js/data/07-diseases-core.js"></script>
+  <script defer src="js/ui/08-icons.js"></script>
+  <script defer src="js/data/09-diseases-batch2.js"></script>
+  <script defer src="js/ui/10-profile.js"></script>
+  <script defer src="js/ui/11-anatomy-model.js"></script>
+  <script defer src="js/data/12-psychiatry.js"></script>
+  <script defer src="js/ui/13-severity-world.js"></script>
+  <script defer src="js/data/14-infectious-a.js"></script>
+  <script defer src="js/ui/15-library.js"></script>
+  <script defer src="js/data/16-paediatrics.js"></script>
+  <script defer src="js/ui/17-organisms-3d.js"></script>
+  <script defer src="js/ui/18-outcomes.js"></script>
+  <script defer src="js/data/19-physiological.js"></script>
+  <script defer src="js/core/20-sources-auth-fx.js"></script>
+  <script defer src="js/data/21-anatomy-qs.js"></script>
+  <script defer src="js/data/22-ent.js"></script>
+  <script defer src="js/data/23-physiological-extended.js"></script>
+  <script defer src="js/ui/24-categories.js"></script>
+  <script defer src="js/data/25-host-art.js"></script>
+  <script defer src="js/ui/26-editor.js"></script>
+  <script defer src="js/ui/27-diagrams.js"></script>
+  <script defer src="js/data/28-diagrams-extended.js"></script>
+  <script defer src="js/ui/29-art-cycles.js"></script>
+  <script defer src="js/ui/31-requests.js"></script>
+  <script defer src="js/data/32-corpus.js"></script>
+  <script defer src="js/ui/33-final-ui.js"></script>
+  <script defer src="js/core/34-motion-guard.js"></script>
+  <script defer src="js/core/35-enhancements.js"></script>
+  <script defer src="js/core/36-cloud-config.js"></script>
+  <script defer src="js/core/37-cloud.js"></script>
+  <script defer src="js/ui/38-organ-views.js"></script>
+  <script defer src="js/ui/39-ratings.js"></script>
+  <script defer src="js/data/40-ontology.js"></script>
+  <script defer src="js/app.js"></script>
+</body></html>
