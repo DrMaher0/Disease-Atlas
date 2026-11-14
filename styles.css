@@ -181,33 +181,39 @@ html[data-mode=light] .note,html[data-mode=light] .qt,html[data-mode=light] .hin
 #silocal{width:100%;margin-top:8px}
 
 /* v0.67 organ views and section ratings */
-.ovtabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
-.ovtabs button{padding:5px 12px;border-radius:99px;font-size:.82rem}
-.ovtabs button.on{border-color:var(--ac);color:var(--ac);background:color-mix(in srgb,var(--ac) 14%,transparent)}
-.ovbody{display:grid;grid-template-columns:minmax(230px,1.1fr) minmax(200px,.9fr);gap:16px;align-items:start}
-@media(max-width:700px){.ovbody{grid-template-columns:1fr}.ovfig{max-width:360px}}
-.ovstage{min-width:0}
-.ovfig{display:block;width:100%;max-width:430px;margin:0 auto;height:auto;overflow:visible}
+.ovtabs{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;justify-content:center}
+.ovtabs button{padding:6px 16px;border-radius:99px;font-size:.82rem;transition:border-color .2s,color .2s,background .2s,box-shadow .2s}
+.ovtabs button.on{border-color:var(--ac);color:var(--ac);background:color-mix(in srgb,var(--ac) 14%,transparent);box-shadow:0 0 16px -6px var(--ac)}
+.ovbody{display:flex;flex-direction:column;align-items:center;gap:18px}
+.ovstage{position:relative;width:100%;max-width:430px;min-width:0;padding:24px 20px 20px;border-radius:22px;border:1px solid color-mix(in srgb,var(--ac) 24%,var(--bd));background:radial-gradient(120% 85% at 50% -5%,color-mix(in srgb,var(--ac) 13%,transparent),transparent 60%),radial-gradient(95% 70% at 50% 108%,color-mix(in srgb,var(--ac2) 12%,transparent),transparent 62%),color-mix(in srgb,var(--pn) 72%,transparent);box-shadow:0 22px 60px -34px var(--ac),inset 0 1px 0 color-mix(in srgb,#fff 7%,transparent)}
+@media(max-width:480px){.ovstage{padding:18px 12px 14px;border-radius:18px}}
+.ovfig{display:block;width:100%;max-width:340px;margin:0 auto;height:auto;overflow:visible}
 .ovfig .bd path,.ovfig .bd ellipse{fill:var(--pn);stroke:color-mix(in srgb,var(--mu) 85%,transparent);stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round}
 .ovfig .ov path,.ovfig .ov ellipse,.ovfig .ov circle,.ovfig .ov rect{stroke-width:1.2;stroke-linejoin:round;stroke-linecap:round}
 .ovfig .ov .l{fill:none;stroke-width:2.6}
+.ovfig .p1{filter:drop-shadow(0 0 5px color-mix(in srgb,var(--ac) 60%,transparent))}
 .ovfig .p1 path,.ovfig .p1 ellipse,.ovfig .p1 circle,.ovfig .p1 rect{fill:color-mix(in srgb,var(--ac) 58%,transparent);stroke:var(--ac)}
 .ovfig .p1 .l{fill:none;stroke:var(--ac);stroke-width:3.2}
+.ovfig .s2{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--ac2) 45%,transparent))}
 .ovfig .s2 path,.ovfig .s2 ellipse,.ovfig .s2 circle,.ovfig .s2 rect{fill:color-mix(in srgb,var(--ac2) 26%,transparent);stroke:var(--ac2);stroke-dasharray:4 3}
 .ovfig .s2 .l{fill:none;stroke:var(--ac2);stroke-width:3;stroke-dasharray:none}
 .ovfig .ov{transition:opacity .2s}
 .ovfig .ov.dim{opacity:.16}
-.ovmiss,.ovint{margin:6px 0}
-.ovleg{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start}
-.ovlgh{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:.75rem;color:var(--mu);margin-bottom:2px;width:100%}
+.ovmiss{margin:12px 0 0;text-align:center}
+.ovint{margin:6px auto;text-align:center;max-width:560px}
+.ovside{width:100%;max-width:600px}
+.ovside .note{text-align:center}
+.ovleg{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;justify-content:center}
+.ovlgh{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;font-size:.75rem;color:var(--mu);margin-bottom:8px;width:100%}
 .ovkey{display:inline-block;width:11px;height:11px;border-radius:3px;border:1px solid var(--bd)}
 .ovkey.p1{background:color-mix(in srgb,var(--ac) 58%,transparent);border-color:var(--ac)}
 .ovkey.s2{background:color-mix(in srgb,var(--ac2) 26%,transparent);border-color:var(--ac2)}
-.ovlk{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:99px;font-size:.78rem;background:#0a1120;border:1px solid var(--bd);color:var(--tx)}
+.ovlk{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;font-size:.78rem;background:#0a1120;border:1px solid var(--bd);color:var(--tx);transition:border-color .2s,box-shadow .2s,transform .15s}
+.ovlk:hover{transform:translateY(-1px)}
 .ovlk i{width:9px;height:9px;border-radius:50%;background:var(--bd);flex:none}
 .ovlk.p1 i{background:var(--ac)}.ovlk.s2 i{background:var(--ac2)}
 .ovlk small{color:var(--mu);font-size:.68rem}
-.ovlk.on{border-color:var(--ac)}
+.ovlk.on{border-color:var(--ac);box-shadow:0 0 14px -6px var(--ac)}
 .rate{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;padding-top:9px;border-top:1px dashed var(--bd);color:var(--mu);font-size:.78rem}
 .rt-stars{display:inline-flex;gap:1px}
 .rt-stars button{display:inline-grid;place-items:center;min-width:32px;min-height:32px;background:none;border:0;padding:0;font-size:1.18rem;line-height:1;color:color-mix(in srgb,var(--mu) 45%,transparent);cursor:pointer;border-radius:8px}
@@ -233,3 +239,21 @@ html[data-mode=light] .ovlk{background:#f7f9fd}
 .apkw .ovpick .apko{fill:color-mix(in srgb,var(--ac) 16%,transparent);stroke:var(--ac2);stroke-opacity:.55}
 .apkw .ovpick .apko:hover{fill:color-mix(in srgb,var(--ac) 28%,transparent);stroke-opacity:1}
 .apkw .ovpick .apko.on{fill:var(--ac);fill-opacity:.55;stroke:var(--ac);stroke-opacity:1}
+/* v0.68 approved line-art eye & kidney */
+.dgm.arv{--tissue:#1a3044;--tissue2:#22405a;--med:#2c4d6b;--fat:#26384b;--vitreous:#16283a;--cornea:#2a5a72;--lens:#3b4a5e;--ink:#e6edf5;--ink2:#9db0c5;--ink3:#6d8098;--venous:#5b9bd5;--arterial:#e06060}
+html[data-mode=light] .dgm.arv{--tissue:#eee0cd;--tissue2:#e2d0b6;--med:#d9c3a2;--fat:#e8dcc8;--vitreous:#f7f1e6;--cornea:#cfe4ea;--lens:#f3e2bb;--ink:#1e2a36;--ink2:#55677a;--ink3:#7d8b9a;--venous:#2b6a97;--arterial:#c0392b}
+.dgm.arv .o{fill:var(--tissue);stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+.dgm.arv .o.line{fill:none}
+.dgm.arv .o.thin{stroke-width:1.1}
+.dgm.arv .o.tint{fill:var(--tissue2)}
+.dgm.arv .o.py{fill:var(--med);stroke-width:1.2}
+.dgm.arv .o.faint{stroke:var(--ink2);stroke-width:1.1}
+.dgm.arv text{fill:var(--ink2);stroke:none}
+.dgm.arv .lbl{font-size:10px}
+.dgm.arv .lbl.mid{font-style:italic;fill:var(--ink3)}
+.dgm.arv .ldrA{stroke:var(--ink3);stroke-width:.8;fill:none}
+.dgm.arv .ldot{fill:var(--ink3)}
+.dgm.arv .labs{pointer-events:none}
+.dgm.arv g.hl .o{stroke:#facc15;stroke-width:2.6}
+.dgm.arv g.pt:hover .o{stroke-width:2.2}
+html[data-mode=light] .dgi{background:var(--pn)}
