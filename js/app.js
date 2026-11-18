@@ -12,7 +12,7 @@ function loadDiagrams() {
   if (diagramsLoading || (typeof DG !== 'undefined' && DG.brainx)) return;
   diagramsLoading = true;
   const finish = () => {
-    if (location.hash.startsWith('#d/')) {
+    if (/^#(?:d\/|diagrams$|org\/)/.test(location.hash)) {
       const y = window.scrollY;
       route();
       window.scrollTo(0, y);

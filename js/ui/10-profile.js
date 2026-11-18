@@ -1,4 +1,4 @@
-let SH=[],SN=9;const sqs=l=>l.map(d=>`<div class='card dz' onclick="go('d/${d.id}')"><span class='di'>${I(iname(d))}</span><b>${DA.esc(d.n)}</b><small>${DA.esc(d.sys)} › ${DA.esc(subOf(d))}</small></div>`).join('');
+let SH=[],SN=9;const sqs=l=>l.map(d=>`<div class='card dz' onclick="go('d/${d.id}')">${dic(d)}<b>${DA.esc(d.n)}</b></div>`).join('');
 function exUp(){const b=$('#ex');b.style.display=SN>=SH.length?'none':'';b.innerHTML='Expand '+I('chev')+' <small>('+(SH.length-SN)+' more)</small>'}
 function dGrid(){const g=$('#dg');if(!g)return;if(!SH.length){SH=D.filter(d=>!d.stub);for(let i=SH.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[SH[i],SH[j]]=[SH[j],SH[i]]}}g.innerHTML=sqs(SH.slice(0,SN));exUp();$('#ex').onclick=()=>{const a=SN;SN=Math.min(SN+9,SH.length);g.insertAdjacentHTML('beforeend',sqs(SH.slice(a,SN)));obs();exUp()}}
 const loggedIn=()=>!!S.uid;function showW(){if(loggedIn()&&S.nw)return;$('#wcb').style.display=loggedIn()?'flex':'none';$('#mw').classList.add('open')}
