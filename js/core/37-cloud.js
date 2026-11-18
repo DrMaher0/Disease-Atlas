@@ -320,10 +320,10 @@
     }
     const name = S.un || 'User';
     if (S.google) {
-      setStatus('Cloud account: ' + name + ' — Google is linked.');
+      setStatus('Cloud account: ' + name + ', Google is linked.');
       paintButtons(true, !S.hasPass);
     } else {
-      setStatus('Cloud account: ' + name + ' — Google is not linked.');
+      setStatus('Cloud account: ' + name + ', Google is not linked.');
       paintButtons(false, true);
     }
   }
@@ -349,7 +349,11 @@
     if (a) a.textContent = 'Your account is stored in the cloud, so it works on any device.';
     if (b) b.textContent = 'Your account is stored securely in the cloud. Date of birth and gender are kept private and are never shown.';
     const label = document.querySelector('#msi label');
-    if (label && /username or email/i.test(label.textContent)) label.textContent = 'Username';
+    if (label && /username or email/i.test(label.textContent)) {
+      const textNode = Array.prototype.slice.call(label.childNodes).find(n => n.nodeType === 3);
+      if (textNode) textNode.nodeValue = ' Username';
+      else label.textContent = 'Username';
+    }
   }
 
   function inject() {

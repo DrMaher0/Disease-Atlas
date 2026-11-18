@@ -143,6 +143,7 @@
     }
   };
 
+  window.esc = esc;
   window.DA = {
     esc,
     attr,

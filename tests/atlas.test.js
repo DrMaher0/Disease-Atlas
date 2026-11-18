@@ -28,7 +28,7 @@
     results.forEach(result => {
       const row = document.createElement('p');
       row.style.margin = '4px 0';
-      row.textContent = (result.ok ? 'PASS ' : 'FAIL ') + result.name + (result.ok ? '' : ' — ' + result.message);
+      row.textContent = (result.ok ? 'PASS ' : 'FAIL ') + result.name + (result.ok ? '' : ': ' + result.message);
       row.style.color = result.ok ? '#4ade80' : '#f87171';
       el.appendChild(row);
     });
@@ -109,6 +109,54 @@
         history.replaceState(null, '', location.pathname + location.search + '#d/asthma');
         route();
         return /asthma/i.test(document.getElementById('app').textContent);
+      } finally {
+        history.replaceState(null, '', href);
+        route();
+      }
+    });
+    check('category art covers every category', () => {
+      if (typeof CATART === 'undefined' || typeof CATI === 'undefined') return false;
+      const keys = new Set(Object.keys(CATI));
+      keys.add('General');
+      return [...keys].every(k => !!CATART[CATI[k] || k]);
+    });
+    check('homepage search with circle quick-actions', () => {
+      const href = location.href;
+      try {
+        history.replaceState(null, '', location.pathname + location.search + '#');
+        route();
+        const circles = document.querySelectorAll('.qac .qac-b');
+        return circles.length >= 4 && !!document.getElementById('q') && !!document.getElementById('howto');
+      } finally {
+        history.replaceState(null, '', href);
+        route();
+      }
+    });
+    check('example search fills the search box', () => {
+      const href = location.href;
+      try {
+        history.replaceState(null, '', location.pathname + location.search + '#');
+        route();
+        exSearch('migraine');
+        const q = document.getElementById('q');
+        const r = document.getElementById('res');
+        const ok = q.value === 'migraine' && !r.hidden && /migraine/i.test(r.textContent);
+        q.value = ''; r.hidden = true;
+        return ok;
+      } finally {
+        history.replaceState(null, '', href);
+        route();
+      }
+    });
+    check('disease page shows evidence legend and jump chips', () => {
+      const href = location.href;
+      try {
+        history.replaceState(null, '', location.pathname + location.search + '#d/asthma');
+        route();
+        const app = document.getElementById('app');
+        const chips = app.querySelectorAll('.jchips button');
+        return !!app.querySelector('.evlg summary') && chips.length >= 3
+          && !!app.querySelector('section.sec#sec-definition, div.sec#sec-definition');
       } finally {
         history.replaceState(null, '', href);
         route();
