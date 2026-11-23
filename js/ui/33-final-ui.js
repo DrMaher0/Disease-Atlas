@@ -10,23 +10,24 @@ function dna(){cx.clearRect(0,0,cv.width,cv.height);if(BGK!='dna'){drawBG();t+=S
  [.2,.8].forEach(fx=>{const x0=cv.width*fx;cx.globalAlpha=.16;for(let y=0;y<cv.height;y+=14){const a=y/90+t,x1=x0+Math.sin(a)*34,x2=x0-Math.sin(a)*34;cx.strokeStyle=c2;cx.beginPath();cx.moveTo(x1,y);cx.lineTo(x2,y);cx.stroke();cx.fillStyle=c1;cx.beginPath();cx.arc(x1,y,3,0,7);cx.fill();cx.fillStyle=c2;cx.beginPath();cx.arc(x2,y,3,0,7);cx.fill()}});
  t+=S.rm?0:.012;DA.motion.frame(dna,30,{pauseOnReduced:true})}
 
-// homepage intro logo: slideshow through ALL art logos (site logo first, then every
-// distinct organ/system art in shuffle order, no repeat until all shown, then reshuffle)
+// homepage intro art: slide through every organ/system logo at 0.2 s, finish on the
+// Disease Atlas logo, hold it for 3 s, then reshuffle and repeat.
 let LOGO_ID=0;
 function logoCycle(){
  const el=document.getElementById('ilog');if(!el)return;
  const id=++LOGO_ID,SITE=el.innerHTML;
- const KEYS=[...new Set([...Object.values(ORGLOGO||{}),...Object.keys(CATART||{}),...Object.values(SUBI||{})])].filter(k=>{try{return CAS(k,210)!==''}catch(e){return 0}});
- let used=[];
+ const KEYS=[...new Set([...Object.values(ORGLOGO||{}),...Object.keys(CATART||{}),...Object.values(SUBI||{})])]
+   .filter(k=>k&&k!='site').filter(k=>{try{return CAS(k,210)!==''}catch(e){return 0}});
  const wait=(fn,ms)=>setTimeout(()=>{if(LOGO_ID===id&&document.getElementById('ilog'))fn()},ms);
- const swap=h=>{el.style.opacity=0;setTimeout(()=>{if(LOGO_ID!==id||!document.getElementById('ilog'))return;el.innerHTML=h;el.style.opacity=1},180)};
- const cycle=()=>{
-  if(!used.length)used=[...KEYS].sort(()=>Math.random()-.5);
-  const k=used.shift();
-  swap(k=='site'?SITE:CAS(k,ORGHUE[k]!=null?ORGHUE[k]:210));
-  wait(cycle,2600);
+ const show=h=>{el.innerHTML=h;if(el.animate)el.animate([{transform:'translateX(22px)',opacity:0},{transform:'none',opacity:1}],{duration:180,easing:'ease-out'})};
+ let deck=[];
+ const step=()=>{
+  if(!deck.length){show(SITE);wait(()=>{deck=[...KEYS].sort(()=>Math.random()-.5);step()},3000);return}
+  const k=deck.shift();
+  show(CAS(k,ORGHUE[k]!=null?ORGHUE[k]:210));
+  wait(step,200);
  };
- cycle();
+ step();
 }
 
 // 3D immune/blood cells (SHAPES + sp/el/arc/limb/FIB are global consts from 17-organisms-3d.js)

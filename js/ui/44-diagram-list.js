@@ -25,7 +25,7 @@ function dgDownload(k) {
   document.body.appendChild(a);
   a.click();
   a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  setTimeout(() => URL.revokeObjectURL(a.href), 60000);
 }
 
 function dgViewLocal(k) {
@@ -53,7 +53,7 @@ function dgOrganPage(k) {
   if (!g) return `<div class="page"><button data-g="diagrams">&larr; All diagrams</button><p>Diagram not found.</p></div>`;
   const l = D.filter(d => DGM[d.id] && DGM[d.id][0] === k).sort((a, b) => a.n.localeCompare(b.n));
   return `<div class="page"><button data-g="diagrams">&larr; All diagrams</button>
-    <div class="sec"><h2>${I('body')} ${g.t}</h2><div class="dgls">${dgSvg(k, [])}</div>
+    <div class="sec"><h2>${I('body')} ${g.t}</h2><div class="dgls dgor">${dgSvg(k, [])}</div>
     <div class="dgbtns"><button onclick="dgViewLocal('${k}')">${I('eye')} View locally</button><button onclick="dgDownload('${k}')">${I('doc')} Download SVG</button></div>
     <p class="note">${l.length} disease${l.length == 1 ? '' : 's'} use this diagram.</p></div>
     ${l.length ? `<div class="sq">${sqs(l)}</div>` : ''}</div>`;

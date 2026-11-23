@@ -335,7 +335,7 @@ kbd{padding:1px 6px;border-radius:5px;border:1px solid var(--bd);border-bottom-w
 .warn details p{margin:6px 0 2px;font-size:.85rem}
 
 /* v0.61 hero circle buttons (replaces text quick-actions + example chips) */
-.qac{display:flex;justify-content:center;gap:14px;margin:18px 0 6px}
+.qac{display:flex;justify-content:center;flex-wrap:wrap;gap:14px;margin:18px 0 6px}
 .qac-b{width:56px;height:56px;border-radius:50%;border:1px solid var(--bd);background:var(--pn);color:var(--tx);display:grid;place-items:center;cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s;padding:0}
 .qac-b svg{width:1.6rem;height:1.6rem}
 .qac-b:hover{transform:translateY(-3px);border-color:var(--ac);box-shadow:0 6px 18px rgba(0,0,0,.25);color:var(--ac)}
@@ -384,10 +384,13 @@ kbd{padding:1px 6px;border-radius:5px;border:1px solid var(--bd);border-bottom-w
 .dgl{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
 .dglc{margin:0;background:var(--pn);border:1px solid var(--bd);border-radius:14px;padding:12px}
 .dgls{height:190px;display:flex;align-items:center;justify-content:center}
+.dgls.dgor{height:auto;min-height:0;margin:10px 0}
+.dgls.dgor svg{width:100%;max-width:780px;max-height:none}
 .dgls svg{max-width:100%;max-height:100%;width:auto;height:auto}
 .dglc figcaption{display:flex;flex-direction:column;gap:2px;margin-top:8px;font-size:.9rem}
 .dglc small{color:var(--mu);font-size:.78rem}
 .dglb,.dgbtns{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .dglb button,.dgbtns button{padding:5px 9px;font-size:.75rem;display:inline-flex;align-items:center;gap:4px}
+@media(max-width:600px){.dglb button,.dgbtns button{min-height:40px;padding:8px 10px}}
 .dglb button svg,.dgbtns button svg{width:.95rem;height:.95rem}
 @media(max-width:560px){.dgl{grid-template-columns:1fr 1fr}.dgls{height:140px}}

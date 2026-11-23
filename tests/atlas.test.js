@@ -208,6 +208,92 @@
       return DA.cloud.stateKey() === (id ? 'da_u_' + id : 'da');
     });
 
+    check('diagram renders for a curated disease', () => {
+      const html = dgS(get('mi'));
+      return /class='dgm/.test(html) && /data-d='heartx'/.test(html);
+    });
+    check('diagram fallback renders for an organ-tagged disease', () => {
+      const html = dgS(get('t2dm'));
+      return /class='dgm/.test(html) && /data-d='gi'/.test(html) && /Small intestine|Pancreas/.test(html);
+    });
+    check('retired grouped views are no longer reachable', () => !/data-d='(?:pelvis|pelvisx|knee|uro|breast|kidney)'/.test(dgS(get('gdm'))));
+    check('disease with no mapping renders no diagram section', () => dgS(get('ida')) === '');
+    check('diagram coverage is 1,910 of 2,494 live pages', () => {
+      const live = D.filter(d => !d.stub && !d.del);
+      return live.length === 2494 && live.filter(d => dgS(d).length > 0).length === 1910;
+    });
+    check('every gi diagram highlight names a real plate part', () => Object.entries(DGM)
+      .filter(([, m]) => m[0] === 'gi')
+      .every(([, m]) => m[1].every(k => !!DG.gi.p[k.replace(/^[-*]+/, '')])));
+    check('small intestine has a hover description', () => typeof DGD !== 'undefined' && !!DGD['gi.sintestine']);
+    check('retired and superseded plates are gone', () => ['heart2', 'thyroid2', 'respiratory2', 'alveoli2', 'brain2', 'spleen2', 'pituitary2', 'kidney', 'uro', 'pelvis', 'pelvisx', 'knee', 'breast', 'preg']
+      .every(k => !DG[k]));
+    check('every curated diagram mapping resolves to real parts', () => Object.entries(DGM).every(([, m]) =>
+      DG[m[0]] && m[1].every(k => DG[m[0]].p[k.replace(/^[-*]+/, '')])));
+    check('digestive system fallback resolves to the GI plate', () => {
+      const m = dgF({ sys: 'Digestive', org: '' });
+      return !!m && m[0] === 'gi' && m[1].includes('sintestine');
+    });
+    check('retained organ set is kidney2, breast2 and the approved views', () => ['kidney2', 'breast2', 'heart', 'heartx', 'lungs', 'brain', 'brainx', 'gi', 'eye', 'skin', 'ear', 'neck', 'necka', 'throat', 'hip', 'male', 'spine']
+      .every(k => DG[k] && DG[k].p));
+    check('every DGM entry points at a live plate', () => Object.entries(DGM).every(([, m]) => !!DG[m[0]]));
+    check('every fallback highlight resolves to a real part', () => Object.values(DGFALL).every(m =>
+      DG[m[0]] && m[1].every(k => DG[m[0]].p[k.replace(/^[-*]+/, '')])));
+    check('kidney coronal section has seven interactive anatomical parts', () => ['parenchyma', 'calyces', 'pelvis', 'ureter', 'vessels', 'adrenal', 'renalvessels']
+      .every(k => DG.kidney2.p[k] && DG.kidney2.p[k][0] && !!DGD['kidney2.' + k]));
+    check('breast lateral section is labelled and interactive', () => ['lobules', 'fat', 'ribs', 'nipple', 'pectoralis']
+      .every(k => DG.breast2.p[k] && !!DGD['breast2.' + k]) && /Lactiferous ducts/.test(dgSvg('breast2', [])));
+    check('heart outside view is labelled and keeps the pericardium', () => {
+      const h = DG.heart.p.pericardium ? DG.heart : ART2.heart;
+      return Object.keys(h.p).length === 14 && /Pericardium/.test(JSON.stringify(h.p)) && !!DGD['heart.pericardium'];
+    });
+    check('heart interior keeps its four-chamber parts', () => ['ra', 'la', 'rv', 'lv', 'septum', 'tv', 'mv', 'av', 'pv']
+      .every(k => DG.heartx.p[k]) && /Interventricular septum/.test(dgSvg('heartx', [])));
+    check('gastrointestinal plate has organ-level parts and the owner labels', () => Object.keys(DG.gi.p).length === 14
+      && ['esophagus', 'liver', 'stomach', 'pancreas', 'sintestine', 'asc', 'trans', 'desc', 'sig', 'appendix', 'rectum'].every(k => DG.gi.p[k] && DGD['gi.' + k])
+      && /Esophagus/.test(dgSvg('gi', [])) && /Anus/.test(dgSvg('gi', [])) && /Transverse colon/.test(dgSvg('gi', []))
+      && (dgSvg('gi', []).match(/class='pt'/g) || []).length === 14);
+    check('female pelvis is the single labelled plate and has live mappings', () => Object.keys(DG.pelvis2.p).length === 8
+      && ['cervix', 'vagina', 'ovaryL', 'ovaryR', 'tubeL', 'tubeR', 'myometrium', 'endometrium'].every(k => DG.pelvis2.p[k])
+      && Object.entries(DGM).some(([, m]) => m[0] === 'pelvis2'));
+
+    check('diagram labels and interactive parts stay inside their view boxes', () => {
+      const host = document.createElement('div');
+      host.style.cssText = 'position:fixed;left:-10000px;top:0;width:800px;height:800px;visibility:hidden';
+      host.innerHTML = Object.keys(DG).map(k => dgSvg(k, [])).join('');
+      document.body.appendChild(host);
+      try {
+        return [...host.querySelectorAll('svg.dgm')].every(svg => {
+          const vb = svg.getAttribute('viewBox').trim().split(/[\s,]+/).map(Number);
+          const inv = svg.getScreenCTM().inverse();
+          const inside = el => {
+            const r = el.getBoundingClientRect();
+            const a = new DOMPoint(r.left, r.top).matrixTransform(inv);
+            const b = new DOMPoint(r.right, r.bottom).matrixTransform(inv);
+            return a.x >= vb[0] - .5 && a.y >= vb[1] - .5 && b.x <= vb[0] + vb[2] + .5 && b.y <= vb[1] + vb[3] + .5;
+          };
+          return [...svg.querySelectorAll('text,g.pt')].every(inside);
+        });
+      } finally {
+        host.remove();
+      }
+    });
+    check('diagram SVG references resolve and interactive groups are not empty', () => {
+      const host = document.createElement('div');
+      host.style.cssText = 'position:fixed;left:-10000px;top:0;width:800px;height:800px;visibility:hidden';
+      host.innerHTML = Object.keys(DG).map(k => dgSvg(k, [])).join('');
+      document.body.appendChild(host);
+      try {
+        return [...host.querySelectorAll('svg.dgm')].every(svg => {
+          const ids = new Set([...svg.querySelectorAll('[id]')].map(el => el.id));
+          const refs = [...svg.outerHTML.matchAll(/url\(#([^)]+)\)|href=["']#([^"']+)["']/g)].map(m => m[1] || m[2]);
+          return refs.every(id => ids.has(id)) && [...svg.querySelectorAll('g.pt')].every(el => el.children.length > 0);
+        });
+      } finally {
+        host.remove();
+      }
+    });
+
     const el = panel();
     el.setAttribute('role', 'region');
     el.setAttribute('aria-label', 'Test results');

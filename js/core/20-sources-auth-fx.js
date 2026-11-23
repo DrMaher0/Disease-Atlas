@@ -42,7 +42,7 @@ $('#ctb').innerHTML=I('palette')+' Create custom theme '+(loggedIn()?'':I('lock'
 const ctPrev=()=>{$('#ctp').style.background='linear-gradient(90deg,'+$('#ct1').value+','+$('#ct2').value+')'};$('#ct1').oninput=$('#ct2').oninput=ctPrev;$('#ctc').onclick=closeM;
 $('#cts').onclick=()=>{const n=$('#ctn').value.trim();if(!n){$('#cte').textContent='Give your theme a name.';return}S.cth=(S.cth||[]).concat([[n,$('#ct1').value,$('#ct2').value]]);TH.push([$('#ct1').value,$('#ct2').value]);THN.push(n);thBuild();S.th=TH.length-1;save();applyS();closeM()};
 renderP();
-const APP_VER='0.76',APP_DATE='19 Nov 2026';
+const APP_VER='0.77',APP_DATE='24 Nov 2026';
 const FX=document.createElement('canvas');FX.id='fx';document.body.appendChild(FX);const fg=FX.getContext('2d');let fp=[],fr=0,ck=[],thr=10+Math.floor(Math.random()*11);
 function fxSize(){FX.width=innerWidth;FX.height=innerHeight}fxSize();addEventListener('resize',DA.debounce(fxSize,160));
 function burst(x,y,n,big){for(let i=0;i<n;i++){const a=Math.random()*6.283,v=(big?3:1.2)+Math.random()*(big?6:2.4);fp.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-(big?0:.6),l:0,m:big?90:40,s:big?1.6:1,ph:Math.random()*6})}if(!fr)fr=DA.motion.frame(fxLoop,60,{pauseOnReduced:true})}
