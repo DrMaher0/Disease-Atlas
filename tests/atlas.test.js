@@ -249,10 +249,12 @@
     });
     check('heart interior keeps its four-chamber parts', () => ['ra', 'la', 'rv', 'lv', 'septum', 'tv', 'mv', 'av', 'pv']
       .every(k => DG.heartx.p[k]) && /Interventricular septum/.test(dgSvg('heartx', [])));
-    check('gastrointestinal plate has organ-level parts and the owner labels', () => Object.keys(DG.gi.p).length === 14
-      && ['esophagus', 'liver', 'stomach', 'pancreas', 'sintestine', 'asc', 'trans', 'desc', 'sig', 'appendix', 'rectum'].every(k => DG.gi.p[k] && DGD['gi.' + k])
-      && /Esophagus/.test(dgSvg('gi', [])) && /Anus/.test(dgSvg('gi', [])) && /Transverse colon/.test(dgSvg('gi', []))
-      && (dgSvg('gi', []).match(/class='pt'/g) || []).length === 14);
+    check('gastrointestinal plate has organ-level parts and the owner labels', () => {
+      const svg = dgSvg('gi', []), keys = new Set([...svg.matchAll(/class='pt' data-k='([^']+)'/g)].map(m => m[1]));
+      return Object.keys(DG.gi.p).length === 14 && keys.size === 14
+        && ['esophagus', 'liver', 'stomach', 'pancreas', 'sintestine', 'asc', 'trans', 'desc', 'sig', 'appendix', 'rectum'].every(k => DG.gi.p[k] && DGD['gi.' + k])
+        && /Oesophagus/.test(svg) && /Rectum and anal canal/.test(svg) && /Transverse colon/.test(svg);
+    });
     check('female pelvis is the single labelled plate and has live mappings', () => Object.keys(DG.pelvis2.p).length === 8
       && ['cervix', 'vagina', 'ovaryL', 'ovaryR', 'tubeL', 'tubeR', 'myometrium', 'endometrium'].every(k => DG.pelvis2.p[k])
       && Object.entries(DGM).some(([, m]) => m[0] === 'pelvis2'));
